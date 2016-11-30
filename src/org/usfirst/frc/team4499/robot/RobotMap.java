@@ -1,4 +1,9 @@
 package org.usfirst.frc.team4499.robot;
+
+import org.usfirst.frc.team4499.robot.tools.DCMotor;
+
+import edu.wpi.first.wpilibj.RobotDrive;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -10,9 +15,17 @@ public class RobotMap {
     // following variables to use with your drivetrain subsystem.
     // public static int leftMotor = 1;
     // public static int rightMotor = 2;
+	public static DCMotor motorLeftOne = new DCMotor(1);
+	public static DCMotor motorLeftTwo = new DCMotor(2);
+	public static DCMotor motorRightOne = new DCMotor(3);
+	public static DCMotor motorRightTwo = new DCMotor(4);
+	public static RobotDrive robotDrive = new RobotDrive(motorLeftOne, motorLeftTwo, motorRightOne, motorRightTwo);
+	
+}
+
     
     // If you are using multiple modules, make sure to define both the port
     // number and the module. For example you with a rangefinder:
     // public static int rangefinderPort = 1;
     // public static int rangefinderModule = 1;
-}
+

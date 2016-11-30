@@ -1,5 +1,6 @@
 
 package org.usfirst.frc.team4499.robot;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -96,6 +97,11 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	RobotMap.motorRightOne.setInverted(true);
+    	RobotMap.motorRightTwo.setInverted(true);
+    	RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
+       
+      // RobotMap.robotDrive.setInvertedMotor(RobotMap.robotDrive.1, 1);
         Scheduler.getInstance().run();
     }
     
