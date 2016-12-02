@@ -10,6 +10,8 @@ import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -91,6 +93,17 @@ public class Robot extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
+    	
+    	RobotMap.lifterMotorMaster.enableBrakeMode(true);
+    	
+    	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.AnalogEncoder);
+    	RobotMap.lifterMotorMaster.reverseSensor(true);
+    	
+    	
+    	RobotMap.lifterMotorSlave.changeControlMode(TalonControlMode.Follower);
+    	
+    	
+    	
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
 
@@ -100,8 +113,23 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	RobotMap.motorRightOne.setInverted(true);
     	RobotMap.motorRightTwo.setInverted(true);
-    	RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
+    	//RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
        
+    	
+    	
+    	
+    	System.out.println(RobotMap.lifterMotorMaster.getEncPosition());
+    	//System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
+    	RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
+    	RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());
+        
+        //SmartDashboard.putNumber("Pressure", RobotMap.lifterMotorMaster.getEncPosition());
+    	
+    	
+    	
+    	
+    	
+    	
       // RobotMap.robotDrive.setInvertedMotor(RobotMap.robotDrive.1, 1);
         Scheduler.getInstance().run();
     }

@@ -1,8 +1,8 @@
 package org.usfirst.frc.team4499.robot;
 
 import org.usfirst.frc.team4499.robot.tools.DCMotor;
-
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.CANTalon;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -21,6 +21,8 @@ public class RobotMap {
 	public static DCMotor motorRightTwo = new DCMotor(4);
 	public static RobotDrive robotDrive = new RobotDrive(motorLeftOne, motorLeftTwo, motorRightOne, motorRightTwo);
 	
+	public static CANTalon lifterMotorMaster = new CANTalon(7);
+	public static CANTalon lifterMotorSlave = new CANTalon(8);
 }
 
 
