@@ -8,6 +8,7 @@ import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
+
 public class OI {
 	public static Joystick controllerOne = new Joystick(0);
     //// CREATING BUTTONS
@@ -25,6 +26,7 @@ public class OI {
     // Once you have a button, it's trivial to bind it to a button in one of
     // three ways:
     
+	
     // Start the command when the button is pressed and let it run the command
     // until it is finished as determined by it's isFinished method.
     // button.whenPressed(new ExampleCommand());
