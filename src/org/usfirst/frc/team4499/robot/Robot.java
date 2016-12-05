@@ -11,7 +11,9 @@ import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import org.usfirst.frc.team4499.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +27,7 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 
+	LifterGoToTicks lifterSet = new LifterGoToTicks(4000);
     Command autonomousCommand;
     SendableChooser chooser;
 
@@ -36,6 +39,26 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new ExampleCommand());
+        
+        //Configure Talons
+        RobotMap.motorRightOne.setInverted(true);
+    	RobotMap.motorRightTwo.setInverted(true);
+        
+    	RobotMap.lifterMotorMaster.enableBrakeMode(true);
+    	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+    	RobotMap.lifterMotorMaster.reverseSensor(true);
+    	RobotMap.lifterMotorMaster.setEncPosition(0);
+    	RobotMap.lifterMotorSlave.changeControlMode(TalonControlMode.Follower);
+    	RobotMap.lifterMotorMaster.changeControlMode(TalonControlMode.PercentVbus);
+    	RobotMap.lifterMotorMaster.setPID(0.4, 0.0003, 30, 0, 1000, 0, 0);
+    	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(100);
+    	RobotMap.lifterMotorMaster.setVoltageRampRate(6);
+    	
+    	RobotMap.lifterMotorMaster.setForwardSoftLimit(7850);
+    	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);
+        
+        
+        
 //        chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
     }
@@ -94,13 +117,9 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
     	
-    	RobotMap.lifterMotorMaster.enableBrakeMode(true);
+    	//lifterSet.start();
     	
-    	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.AnalogEncoder);
-    	RobotMap.lifterMotorMaster.reverseSensor(true);
-    	
-    	
-    	RobotMap.lifterMotorSlave.changeControlMode(TalonControlMode.Follower);
+    
     	
     	
     	
@@ -111,15 +130,14 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	RobotMap.motorRightOne.setInverted(true);
-    	RobotMap.motorRightTwo.setInverted(true);
+    	
     	//RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
        
     	
     	
     	
     	System.out.println(RobotMap.lifterMotorMaster.getEncPosition());
-    	//System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
+    	System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
     	RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
     	RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());
         
