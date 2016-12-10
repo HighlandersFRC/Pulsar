@@ -3,6 +3,10 @@ package org.usfirst.frc.team4499.robot.commands;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team4499.robot.*;
+import org.usfirst.frc.team4499.robot.subsystems.*;
+
+import org.usfirst.frc.team4499.robot.Robot;
+//import org.usfirst.team4499.robot.subsystems.Electronics;
 
 /**
  *
@@ -10,11 +14,14 @@ import org.usfirst.frc.team4499.robot.*;
 public class LifterGoToTicks extends Command {
 
 	int ticks;
+	//Lifter lifter = new Lifter();
 	
 	
     public LifterGoToTicks(int ticks) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	
+    	requires(Robot.lifterSubsystem);
     	this.ticks = ticks;
     }
 
