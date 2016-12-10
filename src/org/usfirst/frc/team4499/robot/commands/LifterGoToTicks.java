@@ -11,10 +11,14 @@ import org.usfirst.frc.team4499.robot.Robot;
 /**
  *
  */
+
 public class LifterGoToTicks extends Command {
 
 	int ticks;
 	//Lifter lifter = new Lifter();
+	
+	
+	
 	
 	
     public LifterGoToTicks(int ticks) {
