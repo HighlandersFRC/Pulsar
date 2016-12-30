@@ -1,13 +1,19 @@
 
 package org.usfirst.frc.team4499.robot;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
+
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team4499.robot.tools.IntakeCorrection;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.CANTalon;
@@ -30,7 +36,8 @@ public class Robot extends IterativeRobot {
 	LifterGoToTicks lifterSet = new LifterGoToTicks(4000);
     Command autonomousCommand;
     SendableChooser chooser;
-
+    AutomaticIntake intakeAuto;
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -39,12 +46,12 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new ExampleCommand());
-        
+        intakeAuto = new AutomaticIntake();
         //Configure Talons
         RobotMap.motorRightOne.setInverted(true);
     	RobotMap.motorRightTwo.setInverted(true);
         
-    	RobotMap.lifterMotorMaster.enableBrakeMode(true);
+    	/*RobotMap.lifterMotorMaster.enableBrakeMode(true);
     	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
     	RobotMap.lifterMotorMaster.reverseSensor(true);
     	RobotMap.lifterMotorMaster.setEncPosition(0);
@@ -55,7 +62,7 @@ public class Robot extends IterativeRobot {
     	RobotMap.lifterMotorMaster.setVoltageRampRate(6);
     	
     	RobotMap.lifterMotorMaster.setForwardSoftLimit(7850);
-    	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);
+    	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);*/
         
         
         
@@ -107,6 +114,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	
         Scheduler.getInstance().run();
     }
 
@@ -126,29 +134,24 @@ public class Robot extends IterativeRobot {
     	
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
+   
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	  //OI.autointake.whenPressed(new Automaticintake());
+    	RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
     	
-    	//RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
-       
-    	
-    	
-    	
-    	System.out.println(RobotMap.lifterMotorMaster.getEncPosition());
-    	System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
-    	RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
-    	RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());
-        
-        //SmartDashboard.putNumber("Pressure", RobotMap.lifterMotorMaster.getEncPosition());
-    	
-    	
-    	
-    	
-    	
-    	
+    	if(OI.autointake.get()){
+    		intakeAuto.start();
+    	}
+    	IntakeCorrection.intakecrate();
+    	//System.out.println(RobotMap.lifterMotorMaster.getEncPosition());
+    	//System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
+    	//RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
+    	//RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());        
+        //SmartDashboard.putNumber("Pressure", RobotMap.lifterMotorMaster.getEncPosition());    
       // RobotMap.robotDrive.setInvertedMotor(RobotMap.robotDrive.1, 1);
         Scheduler.getInstance().run();
     }

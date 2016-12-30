@@ -22,7 +22,8 @@ public class RobotMap {
 	public static DCMotor motorRightOne = new DCMotor(3);
 	public static DCMotor motorRightTwo = new DCMotor(4);
 	public static RobotDrive robotDrive = new RobotDrive(motorLeftOne, motorLeftTwo, motorRightOne, motorRightTwo);
-	
+	public static DCMotor leftintake = new DCMotor(6);
+	public static DCMotor rightintake = new DCMotor(5);
 	public static CANTalon lifterMotorMaster = new CANTalon(7);
 	public static CANTalon lifterMotorSlave = new CANTalon(8);
 }
