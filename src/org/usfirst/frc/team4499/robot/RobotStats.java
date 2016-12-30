@@ -8,6 +8,6 @@ public class RobotStats {
 	public static double floorFriction = 0;
 	public static double referenceVoltage = 12;
 	
-	
+	public static int endTicks = 0;
 
 }

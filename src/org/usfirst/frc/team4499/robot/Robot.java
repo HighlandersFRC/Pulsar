@@ -14,12 +14,16 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team4499.robot.tools.IntakeCorrection;
 
+import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
+
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import org.usfirst.frc.team4499.robot.commands.*;
+import org.usfirst.frc.team4499.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,24 +36,43 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
+	
+	public static Lifter lifter;
 
-	LifterGoToTicks lifterSet = new LifterGoToTicks(4000);
+	//LifterGoToTicks lifterSet = new LifterGoToTicks(4000);
     Command autonomousCommand;
     SendableChooser chooser;
+
     AutomaticIntake intakeAuto;
     
+
+    ConfigureTalons configTalons = new ConfigureTalons();
+    
+int endingTicks;
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+    	lifter = new Lifter();
 		oi = new OI();
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new ExampleCommand());
+
         intakeAuto = new AutomaticIntake();
+
+        
+        endingTicks = Math.abs(RobotMap.lifterMotorMaster.getEncPosition());
+    	RobotStats.endTicks = endingTicks;
+        
+        //Lifter = new Lifter();
+        
+
         //Configure Talons
-        RobotMap.motorRightOne.setInverted(true);
-    	RobotMap.motorRightTwo.setInverted(true);
+        
+        //RobotMap.motorRightOne.setInverted(true);
+    	//RobotMap.motorRightTwo.setInverted(true);
         
     	/*RobotMap.lifterMotorMaster.enableBrakeMode(true);
     	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
@@ -57,13 +80,16 @@ public class Robot extends IterativeRobot {
     	RobotMap.lifterMotorMaster.setEncPosition(0);
     	RobotMap.lifterMotorSlave.changeControlMode(TalonControlMode.Follower);
     	RobotMap.lifterMotorMaster.changeControlMode(TalonControlMode.PercentVbus);
-    	RobotMap.lifterMotorMaster.setPID(0.4, 0.0003, 30, 0, 1000, 0, 0);
+    	RobotMap.lifterMotorMaster.setPID(0.4, 0.0006, 30, 0, 1000, 0, 0);
     	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(100);
     	RobotMap.lifterMotorMaster.setVoltageRampRate(6);
-    	
+    	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(0);    	
     	RobotMap.lifterMotorMaster.setForwardSoftLimit(7850);
     	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);*/
         
+        //System.out.println("Configuring Talons Test");
+        //configTalons.start();
+        //System.out.println("Configured Talons");
         
         
 //        chooser.addObject("My Auto", new MyAutoCommand());
@@ -126,7 +152,11 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
     	
     	//lifterSet.start();
-    
+
+    	RobotMap.lifterMotorMaster.setVoltageRampRate(100);
+    	
+    	//RobotMap.lifterMotorMaster.setVoltageRampRate(16);
+
     	
     	
     	
@@ -140,8 +170,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+
     	  //OI.autointake.whenPressed(new Automaticintake());
-    	RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
+    	RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(4),0,0);
     	
     	if(OI.autointake.get()){
     		intakeAuto.start();
@@ -152,6 +183,34 @@ public class Robot extends IterativeRobot {
     	//RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
     	//RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());        
         //SmartDashboard.putNumber("Pressure", RobotMap.lifterMotorMaster.getEncPosition());    
+
+    	
+    	//RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
+       
+    	
+    	//System.out.println(-OI.controllerOne.getRawAxis(5));
+    	
+    	if (Math.abs(-OI.controllerOne.getRawAxis(5)) > .1) {
+    		lifter.controlLifter();
+    	} else {
+    		lifter.stop();
+    	}
+    	
+    	
+    	
+    	//System.out.println(RobotMap.lifterMotorMaster.getEncPosition());
+    	//System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
+    	//RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
+    	RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());
+        
+        //SmartDashboard.putNumber("Pressure", RobotMap.lifterMotorMaster.getEncPosition());
+    	
+    	
+    	
+    	
+    	
+    	
+
       // RobotMap.robotDrive.setInvertedMotor(RobotMap.robotDrive.1, 1);
         Scheduler.getInstance().run();
     }

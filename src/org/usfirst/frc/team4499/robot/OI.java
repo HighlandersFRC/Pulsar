@@ -13,10 +13,11 @@ import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
 
 public class OI {
 	public static Joystick controllerOne = new Joystick(0);
+
 	public static JoystickButton intakeinbutton = new JoystickButton(controllerOne,5);
 	public static JoystickButton intakeoutbutton = new JoystickButton(controllerOne,6);
 	public static JoystickButton autointake = new JoystickButton(controllerOne,1);
-	
+
     //// CREATING BUTTONS
     // One type of button is a joystick button which is any button on a joystick.
     // You create one by telling it which joystick it's on and which button
