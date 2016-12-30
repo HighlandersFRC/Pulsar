@@ -28,30 +28,33 @@ public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	
-	public static Lifter lifterSubsystem;
+	public static Lifter lifter;
 
 	//LifterGoToTicks lifterSet = new LifterGoToTicks(4000);
     Command autonomousCommand;
     SendableChooser chooser;
     ConfigureTalons configTalons = new ConfigureTalons();
     
-
+int endingTicks;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-    	lifterSubsystem = new Lifter();
+    	lifter = new Lifter();
 		oi = new OI();
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new ExampleCommand());
+        
+        endingTicks = Math.abs(RobotMap.lifterMotorMaster.getEncPosition());
+    	RobotStats.endTicks = endingTicks;
         
         //Lifter = new Lifter();
         
         //Configure Talons
         
-        RobotMap.motorRightOne.setInverted(true);
-    	RobotMap.motorRightTwo.setInverted(true);
+        //RobotMap.motorRightOne.setInverted(true);
+    	//RobotMap.motorRightTwo.setInverted(true);
         
     	RobotMap.lifterMotorMaster.enableBrakeMode(true);
     	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
@@ -62,7 +65,7 @@ public class Robot extends IterativeRobot {
     	RobotMap.lifterMotorMaster.setPID(0.4, 0.0006, 30, 0, 1000, 0, 0);
     	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(100);
     	RobotMap.lifterMotorMaster.setVoltageRampRate(6);
-    	
+    	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(0);    	
     	RobotMap.lifterMotorMaster.setForwardSoftLimit(7850);
     	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);
         
@@ -130,15 +133,11 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
     	
     	//lifterSet.start();
-<<<<<<< HEAD
-    	
-    	
+
     	RobotMap.lifterMotorMaster.setVoltageRampRate(100);
     	
     	//RobotMap.lifterMotorMaster.setVoltageRampRate(16);
-=======
-    
->>>>>>> origin/Dev
+
     	
     	
     	
@@ -155,13 +154,14 @@ public class Robot extends IterativeRobot {
     	//RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(5),0,0);
        
     	
-    	System.out.println(-OI.controllerOne.getRawAxis(5));
+    	//System.out.println(-OI.controllerOne.getRawAxis(5));
     	
     	if (Math.abs(-OI.controllerOne.getRawAxis(5)) > .1) {
-    		lifterSubsystem.controlLifter();
+    		lifter.controlLifter();
     	} else {
-    		lifterSubsystem.stop();
+    		lifter.stop();
     	}
+    	
     	
     	
     	//System.out.println(RobotMap.lifterMotorMaster.getEncPosition());

@@ -17,11 +17,11 @@ public class RobotMap {
     // following variables to use with your drivetrain subsystem.
     // public static int leftMotor = 1;
     // public static int rightMotor = 2;
-	public static DCMotor motorLeftOne = new DCMotor(1);
+	/*public static DCMotor motorLeftOne = new DCMotor(1);
 	public static DCMotor motorLeftTwo = new DCMotor(2);
 	public static DCMotor motorRightOne = new DCMotor(3);
 	public static DCMotor motorRightTwo = new DCMotor(4);
-	public static RobotDrive robotDrive = new RobotDrive(motorLeftOne, motorLeftTwo, motorRightOne, motorRightTwo);
+	public static RobotDrive robotDrive = new RobotDrive(motorLeftOne, motorLeftTwo, motorRightOne, motorRightTwo);*/
 	
 	public static CANTalon lifterMotorMaster = new CANTalon(7);
 	public static CANTalon lifterMotorSlave = new CANTalon(8);
