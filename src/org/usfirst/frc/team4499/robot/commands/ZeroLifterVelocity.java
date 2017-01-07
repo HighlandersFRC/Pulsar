@@ -22,7 +22,10 @@ public class ZeroLifterVelocity extends Command {
     	RobotMap.lifterMotorMaster.changeControlMode(TalonControlMode.Speed);
     	//RobotMap.lifterMotorMaster.
     	//RobotMap.lifterMotorMaster.setPID(p, i, d, f, izone, closeLoopRampRate, profile);
-    	RobotMap.lifterMotorMaster.setPID(1, 0.0008, 200, 0, 1000, 0, 0);
+    	RobotMap.lifterMotorMaster.setPID(1, 0.001, 50, 0, 1000, 0, 0);
+    	System.out.println("P value = " + String.valueOf(RobotMap.lifterMotorMaster.getP()));
+    	System.out.println("I value = " + String.valueOf(RobotMap.lifterMotorMaster.getI()));
+    	System.out.println("D value = " + String.valueOf(RobotMap.lifterMotorMaster.getD()));
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -34,7 +37,7 @@ public class ZeroLifterVelocity extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Math.abs(RobotMap.lifterMotorMaster.getEncVelocity()) < 5;
+    	return Math.abs(RobotMap.lifterMotorMaster.getEncVelocity()) < 20;
     }
 
     // Called once after isFinished returns true

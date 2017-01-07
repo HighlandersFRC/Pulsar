@@ -24,17 +24,18 @@ public class ControlLifter extends Command {
     
     // Called just before this Command runs the first time
     protected void initialize() {
-    	RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5));
+    	RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(1));
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//RobotStats.endTicks = Math.abs(RobotMap.lifterMotorMaster.getEncPosition());
+    	//System.out.println("Running ControlLifter");
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(-OI.controllerOne.getRawAxis(5)) < .1;
+        return Math.abs(-OI.controllerOne.getRawAxis(1)) < .1;
     	//return Math.abs(RobotMap.lifterMotorMaster.getEncVelocity()) < 50;
     }
 

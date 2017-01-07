@@ -38,6 +38,8 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	
 	public static Lifter lifter;
+	
+	OneDimensionalVelocityMP testMP;
 
 	//LifterGoToTicks lifterSet = new LifterGoToTicks(4000);
     Command autonomousCommand;
@@ -49,6 +51,11 @@ public class Robot extends IterativeRobot {
     ConfigureTalons configTalons = new ConfigureTalons();
     
 int endingTicks;
+double startTime;
+double previousTime;
+double currentVelocity;
+double previousVelocity;
+boolean firstTime = true;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -65,6 +72,8 @@ int endingTicks;
         
         endingTicks = Math.abs(RobotMap.lifterMotorMaster.getEncPosition());
     	RobotStats.endTicks = endingTicks;
+    	
+    	testMP = new OneDimensionalVelocityMP(-50, RobotMap.lifterMotorMaster, lifter, 100, 1);
         
         //Lifter = new Lifter();
         
@@ -74,18 +83,18 @@ int endingTicks;
         //RobotMap.motorRightOne.setInverted(true);
     	//RobotMap.motorRightTwo.setInverted(true);
         
-    	/*RobotMap.lifterMotorMaster.enableBrakeMode(true);
+    	RobotMap.lifterMotorMaster.enableBrakeMode(true);
     	RobotMap.lifterMotorMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
     	RobotMap.lifterMotorMaster.reverseSensor(true);
     	RobotMap.lifterMotorMaster.setEncPosition(0);
     	RobotMap.lifterMotorSlave.changeControlMode(TalonControlMode.Follower);
     	RobotMap.lifterMotorMaster.changeControlMode(TalonControlMode.PercentVbus);
     	RobotMap.lifterMotorMaster.setPID(0.4, 0.0006, 30, 0, 1000, 0, 0);
-    	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(100);
+    	//RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(0);
     	RobotMap.lifterMotorMaster.setVoltageRampRate(6);
     	RobotMap.lifterMotorMaster.setAllowableClosedLoopErr(0);    	
     	RobotMap.lifterMotorMaster.setForwardSoftLimit(7850);
-    	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);*/
+    	RobotMap.lifterMotorMaster.enableForwardSoftLimit(true);
         
         //System.out.println("Configuring Talons Test");
         //configTalons.start();
@@ -107,6 +116,7 @@ int endingTicks;
 	
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		RobotStats.endTicks = Math.abs(RobotMap.lifterMotorMaster.getEncPosition());
 	}
 
 	/**
@@ -150,16 +160,20 @@ int endingTicks;
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-    	
+    	firstTime = true;
     	//lifterSet.start();
 
+    	
+    	testMP.start();
+    	
+    	//RobotMap.lifterMotorMaster.set(0);
+    	
     	RobotMap.lifterMotorMaster.setVoltageRampRate(100);
     	
     	//RobotMap.lifterMotorMaster.setVoltageRampRate(16);
 
-    	
-    	
-    	
+    	startTime = Timer.getFPGATimestamp();
+    	previousVelocity = RobotMap.lifterMotorMaster.getEncVelocity();
     	
     	
         if (autonomousCommand != null) autonomousCommand.cancel();
@@ -170,6 +184,8 @@ int endingTicks;
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	
+    	//System.out.println("firstTime: " + firstTime);
 
     	  //OI.autointake.whenPressed(new Automaticintake());
     	RobotMap.robotDrive.mecanumDrive_Cartesian(OI.controllerOne.getRawAxis(4), OI.controllerOne.getRawAxis(4),0,0);
@@ -190,15 +206,35 @@ int endingTicks;
     	
     	//System.out.println(-OI.controllerOne.getRawAxis(5));
     	
-    	if (Math.abs(-OI.controllerOne.getRawAxis(5)) > .1) {
+    	if (Math.abs(-OI.controllerOne.getRawAxis(1)) > .1) {
     		lifter.controlLifter();
     	} else {
     		lifter.stop();
     	}
     	
+    	//System.out.println("Time: " + Timer.getFPGATimestamp());
+    	
+    	// currentAcceleration = (currentVelocity - previousVelocity) / (currentTime - previousTime);
+    	//System.out.println("Current acceleration: " + ((RobotMap.lifterMotorMaster.getEncVelocity() - previousVelocity) / (Timer.getFPGATimestamp() - previousTime)) );
+    	
+    	//if ((Math.abs(-OI.controllerOne.getRawAxis(1)) > 0.1) && (firstTime == true)) { 
+    		//System.out.println("Started timer");
+    		//startTime = Timer.getFPGATimestamp();
+    		//firstTime = false;
+    	//}
     	
     	
-    	//System.out.println(RobotMap.lifterMotorMaster.getEncPosition());
+    	//System.out.println(RobotMap.lifterMotorMaster.getEncVelocity());
+    	
+    	//if (Math.abs(RobotMap.lifterMotorMaster.getEncVelocity()) > 400) {
+    		//System.out.println("Ended timer");
+    		//System.out.println("Timer: " + Timer.getFPGATimestamp());
+    		//System.out.println("Current acceleration: " + ((RobotMap.lifterMotorMaster.getEncVelocity() - previousVelocity) / (Timer.getFPGATimestamp() - previousTime)) );
+    		//System.out.println(startTime - Timer.getFPGATimestamp());
+    	//}
+    	previousVelocity = RobotMap.lifterMotorMaster.getEncVelocity();
+    	previousTime = Timer.getFPGATimestamp();
+    	
     	//System.out.println(RobotMap.lifterMotorMaster.getOutputVoltage());
     	//RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5)); //Negative because the controller has up -> negative return
     	RobotMap.lifterMotorSlave.set(RobotMap.lifterMotorMaster.getDeviceID());

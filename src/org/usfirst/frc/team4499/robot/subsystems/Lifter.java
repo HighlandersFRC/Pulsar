@@ -36,7 +36,7 @@ public class Lifter extends Subsystem {
 		RobotMap.lifterMotorMaster.setVoltageRampRate(30);
 		//System.out.println("Running controlLifter");
 		//System.out.println(RobotStats.endTicks);
-		//RobotMap.lifterMotorMaster.set(-OI.controllerOne.getRawAxis(5));
+
 		lifterMotor.changeControlMode(TalonControlMode.PercentVbus);
 		controlLifter = new ControlLifter();
 		controlLifter.start();
