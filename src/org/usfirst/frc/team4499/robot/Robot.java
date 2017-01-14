@@ -130,15 +130,15 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
     	
     	//lifterSet.start();
-<<<<<<< HEAD
+//<<<<<<< HEAD
     	
     	
     	RobotMap.lifterMotorMaster.setVoltageRampRate(100);
     	
     	//RobotMap.lifterMotorMaster.setVoltageRampRate(16);
-=======
+//=======
     
->>>>>>> origin/Dev
+//>>>>>>> origin/Dev
     	
     	
     	
